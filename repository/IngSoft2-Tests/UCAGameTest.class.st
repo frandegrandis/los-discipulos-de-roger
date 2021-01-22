@@ -17,7 +17,8 @@ Class {
 		'aRepeat',
 		'targetFran',
 		'targetManu',
-		'nonTarget'
+		'nonTarget',
+		'aReversal'
 	],
 	#category : #'IngSoft2-Tests-UCAGame-Tests'
 }
@@ -51,7 +52,7 @@ UCAGameTest >> lapsOf: aPlayer in: aGame [
 { #category : #tests }
 UCAGameTest >> noEffectBoardOf12 [
 	| boardGenerator |
-	boardGenerator := BoardGenerator with: 10 of: NoEffect new.
+	boardGenerator := BoardGenerator with: 10 of: aNoEffect .
 	^ boardGenerator buildOf: 12
 ]
 
@@ -60,7 +61,7 @@ UCAGameTest >> overloadTestBoard [
 	| anArrayOfFields |
 	anArrayOfFields := OrderedCollection new.
 	anArrayOfFields add: aNoEffect.
-	anArrayOfFields add: PickCard new.
+	anArrayOfFields add: PickCard create.
 	anArrayOfFields add: aNoEffect.
 	anArrayOfFields add: aWormhole.
 	anArrayOfFields add: aNoEffect.
@@ -97,13 +98,14 @@ UCAGameTest >> setUp [
 	super setUp.
 	players := OrderedCollection withAll: {'Fran' . 'Manu'}.
 	die := Die of: 6 rolling: #(4 1).
-	aNoEffect := NoEffect new.
-	aWormhole := Wormhole new.
-	anAtomicBomb := AtomicBomb new.
-	aSpeedUp := SpeedUp new.
+	aNoEffect := NoEffect create.
+	aWormhole := Wormhole create.
+	anAtomicBomb := AtomicBomb create.
+	aSpeedUp := SpeedUp create.
 	anAcceleration := Acceleration to: NonTarget new.
 	aCancellation := Cancellation  to: NonTarget new.
 	anOverload := Overload  to: NonTarget new.
+	aReversal := Reversal to: NonTarget new.
 	aSpeed := Speed  to: NonTarget new.
 	aRedo := Redo  to: NonTarget new.
 	aRepeat := Repeat to: NonTarget new.
@@ -130,7 +132,7 @@ UCAGameTest >> speedTestBoard [
 	| anArrayOfFields |
 	anArrayOfFields := OrderedCollection new.
 	2 timesRepeat: [ anArrayOfFields add: aNoEffect ].
-	anArrayOfFields add: PickCard new.
+	anArrayOfFields add: PickCard create .
 	anArrayOfFields add: aNoEffect.
 	anArrayOfFields add: aWormhole.
 	anArrayOfFields add: aSpeedUp.
@@ -519,7 +521,7 @@ UCAGameTest >> testTriggerAPickCard [
 	actualPlayer := 'Manu'.
 	aGame := UCAGame
 		with: die
-		on: ((BoardGenerator with: 10 of: PickCard new) buildOf: 10)
+		on: ((BoardGenerator with: 10 of: PickCard create) buildOf: 10)
 		playedBy: {actualPlayer}
 		withLaps: 1.
 	self assert: aGame actualPlayer cardCount equals: 2.
@@ -533,7 +535,7 @@ UCAGameTest >> testTriggerASpeedUp [
 	actualPlayer := 'Manu'.
 	aGame := UCAGame
 		with: (Die of: 6 rolling: #(6))
-		on: ((BoardGenerator with: 10 of: SpeedUp new) buildOf: 10)
+		on: ((BoardGenerator with: 10 of: aSpeedUp ) buildOf: 10)
 		playedBy: {actualPlayer}
 		withLaps: 1.
 	self assert: (self positionOf: actualPlayer in: aGame) equals: 0.
@@ -549,7 +551,7 @@ UCAGameTest >> testTriggerAWormHole [
 	actualPlayer := 'Manu'.
 	aGame := UCAGame
 		with: (Die of: 6 rolling: #(6))
-		on: ((BoardGenerator with: 10 of: Wormhole new) buildOf: 10)
+		on: ((BoardGenerator with: 10 of: aWormhole ) buildOf: 10)
 		playedBy: {actualPlayer}
 		withLaps: 1.
 	self assert: (self positionOf: actualPlayer in: aGame) equals: 0.
@@ -610,7 +612,7 @@ UCAGameTest >> testTriggerAnAtomicBombAtStartDoesNothing [
 	| aGame |
 	aGame := UCAGame
 		with: (Die of: 6 rolling: #(6))
-		on: ((BoardGenerator with: 10 of: AtomicBomb new) buildOf: 10)
+		on: ((BoardGenerator with: 10 of: anAtomicBomb ) buildOf: 10)
 		playedBy: players
 		withLaps: 1.
 	self assert: (self positionOf: 'Fran' in: aGame) equals: 0.
@@ -951,6 +953,48 @@ UCAGameTest >> testTriggerRepeatBeforeAnyTurnIsPlayed [
 	raise: InvalidAction
 	withMessageText: 'Cannot use Repeat before dice have been thrown'.
 	self assert: (self cardsOf: 'Fran' in: aGame) equals: 2.
+]
+
+{ #category : #tests }
+UCAGameTest >> testTriggerReversalOnNoEffectField [
+	| aGame |
+	aGame := UCAGame
+		with: (Die of: 6 rolling: #(4))
+		on: self noEffectBoardOf12
+		playedBy: players
+		withLaps: 1
+		shuffling: (CardDeck with: {aReversal} of: #(1 2)).
+	aGame player: 'Fran' playCard: (Reversal to: (TargetBoardPosition pointing: 4)).
+	self assert: (self cardsOf: 'Fran' in: aGame) equals: 1.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 4.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 4.
+]
+
+{ #category : #tests }
+UCAGameTest >> testTriggerReversalOnWormhole [
+	| aGame anArrayOfFields |
+	anArrayOfFields := OrderedCollection new.
+	4 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	anArrayOfFields add: aWormhole.
+	6 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	aGame := UCAGame
+		with: (Die of: 6 rolling: #(4))
+		on: (Board withFields: anArrayOfFields)
+		playedBy: players
+		withLaps: 1
+		shuffling: (CardDeck with: {aReversal} of: #(1 2)).
+	aGame player: 'Fran' playCard: (Reversal to: (TargetBoardPosition pointing: 4)).
+	self assert: (self cardsOf: 'Fran' in: aGame) equals: 1.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 8.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 8.
 ]
 
 { #category : #tests }

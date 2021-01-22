@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #playing }
-SpeedUp >> triggerEffectFor: aGame [
+SpeedUp >> triggerNormalEffectFor: aGame [
 	aGame moveActualPlayerForward: 4.
 ]

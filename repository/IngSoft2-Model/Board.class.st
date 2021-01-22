@@ -27,13 +27,18 @@ Board >> fields [
 { #category : #initialization }
 Board >> initializeWithFields: arrayOfFields [
 fields := arrayOfFields.
-lastEffect := InvalidEffect new.
+lastEffect := InvalidEffect create.
 
 ]
 
 { #category : #accessing }
 Board >> length [
  ^fields size.
+]
+
+{ #category : #'as yet unclassified' }
+Board >> reverseField: aPosition [
+	(fields at: aPosition+1) reverseEffect
 ]
 
 { #category : #playing }

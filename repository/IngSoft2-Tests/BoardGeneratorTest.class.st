@@ -43,14 +43,6 @@ BoardGeneratorTest >> setUp [
 ]
 
 { #category : #tests }
-BoardGeneratorTest >> test02CannotCreateABoardWithZeroOrNegativeFields [
-	self
-		should: [ BoardGenerator new buildOf: 0 ]
-		raise: InstanceCreationFailed
-		withMessageText: 'Cannot create a board of zero or negative length'
-]
-
-{ #category : #tests }
 BoardGeneratorTest >> testBoardGeneratorCompletedHave100Fields [
 	aBoardGenerator := BoardGenerator with: 20 of: Wormhole new.
 	self assert: aBoardGenerator completeFields size equals: 100
@@ -73,4 +65,12 @@ BoardGeneratorTest >> testBoardHasCorrectDistribution [
 	self assert: (self averageOf: countWormhole) equals: 20.
 	self assert: (self averageOf: countspeedUp) equals: 20.
 	self assert: (self averageOf: countMoonwalk) equals: 10
+]
+
+{ #category : #tests }
+BoardGeneratorTest >> testCannotCreateABoardWithZeroOrNegativeFields [
+	self
+		should: [ BoardGenerator new buildOf: 0 ]
+		raise: InstanceCreationFailed
+		withMessageText: 'Cannot create a board of zero or negative length'
 ]

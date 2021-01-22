@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : #playing }
-Wormhole >> triggerEffectFor: aGame [
+Wormhole >> triggerNormalEffectFor: aGame [
 	aGame moveActualPlayerBackwards: 4.
+]
+
+{ #category : #playing }
+Wormhole >> triggerReverseEffectFor: aGame [
+	aGame moveActualPlayerForward: 4.
 ]

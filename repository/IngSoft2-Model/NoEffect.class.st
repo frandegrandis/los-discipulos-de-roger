@@ -5,5 +5,10 @@ Class {
 }
 
 { #category : #playing }
-NoEffect >> triggerEffectFor: aGame [
+NoEffect >> triggerNormalEffectFor: aGame [
+]
+
+{ #category : #playing }
+NoEffect >> triggerReverseEffectFor: anUCAGame [ 
+	
 ]

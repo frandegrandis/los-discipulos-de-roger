@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #playing }
-PickCard >> triggerEffectFor: aGame [ 
+PickCard >> triggerNormalEffectFor: aGame [ 
 	aGame pickCardForActualPlayer.
 ]

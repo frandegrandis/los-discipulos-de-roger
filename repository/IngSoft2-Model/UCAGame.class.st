@@ -224,6 +224,11 @@ UCAGame >> resetAllPlayersPosition [
 	scoreboard do: [ :player | player resetPosition  ]
 ]
 
+{ #category : #'as yet unclassified' }
+UCAGame >> reverseField: aPosition [ 
+	board reverseField: aPosition
+]
+
 { #category : #playing }
 UCAGame >> roll [
 	^dice roll.

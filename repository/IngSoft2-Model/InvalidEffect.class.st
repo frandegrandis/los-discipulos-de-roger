@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #playing }
-InvalidEffect >> triggerEffectFor: aGame [
+InvalidEffect >> triggerNormalEffectFor: aGame [
 	InvalidAction signal: 'Cannot use Repeat before dice have been thrown'
 ]

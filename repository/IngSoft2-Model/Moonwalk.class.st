@@ -20,11 +20,12 @@ Moonwalk class >> createField: anInteger [
 
 { #category : #initialization }
 Moonwalk >> initializeWithN: anInteger [
+	self initializing.
 	fieldsToMove := anInteger * (-1).
 	
 ]
 
 { #category : #playing }
-Moonwalk >> triggerEffectFor: aGame [
+Moonwalk >> triggerNormalEffectFor: aGame [
 	aGame moonWalk: fieldsToMove .
 ]

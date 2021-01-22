@@ -5,6 +5,6 @@ Class {
 }
 
 { #category : #playing }
-AtomicBomb >> triggerEffectFor: aGame [
+AtomicBomb >> triggerNormalEffectFor: aGame [
 	aGame resetAllPlayersPosition.
 ]

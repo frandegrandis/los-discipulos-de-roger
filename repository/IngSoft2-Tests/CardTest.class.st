@@ -5,9 +5,9 @@ Class {
 }
 
 { #category : #tests }
-CardTest >> assertAverageIsBetween15and17Of: overloadCount [
+CardTest >> assertAverageIsBetween13and15Of: overloadCount [
 	self
-		assert: ((self averagePercentOf: overloadCount) between: 15 and: 17)
+		assert: ((self averagePercentOf: overloadCount) between: 13 and: 15)
 ]
 
 { #category : #tests }
@@ -25,7 +25,7 @@ CardTest >> testCancellationCannotBeInitializeWithATargetPlayer [
 
 { #category : #tests }
 CardTest >> testCardDeckHasUniformDistribution [
-	| aCardDeck cardsDrawn overloadCount accelerationCount cancellationCount redoCount repeatCount speedCount |
+	| aCardDeck cardsDrawn overloadCount accelerationCount cancellationCount redoCount repeatCount speedCount reversalCount |
 	aCardDeck := CardDeck withAllCards.
 	cardsDrawn := OrderedCollection new.
 	100000 timesRepeat: [ cardsDrawn add: aCardDeck draw ].
@@ -38,12 +38,14 @@ CardTest >> testCardDeckHasUniformDistribution [
 		count: [ :card | card isMemberOf: Cancellation ].
 	redoCount := cardsDrawn count: [ :card | card isMemberOf: Redo ].
 	repeatCount := cardsDrawn count: [ :card | card isMemberOf: Repeat ].
-	self assertAverageIsBetween15and17Of: overloadCount.
-	self assertAverageIsBetween15and17Of: speedCount.
-	self assertAverageIsBetween15and17Of: accelerationCount.
-	self assertAverageIsBetween15and17Of: cancellationCount.
-	self assertAverageIsBetween15and17Of: redoCount.
-	self assertAverageIsBetween15and17Of: repeatCount
+	reversalCount := cardsDrawn count: [ :card | card isMemberOf: Reversal ].
+	self assertAverageIsBetween13and15Of: overloadCount.
+	self assertAverageIsBetween13and15Of: speedCount.
+	self assertAverageIsBetween13and15Of: accelerationCount.
+	self assertAverageIsBetween13and15Of: cancellationCount.
+	self assertAverageIsBetween13and15Of: redoCount.
+	self assertAverageIsBetween13and15Of: repeatCount.
+	self assertAverageIsBetween13and15Of: reversalCount
 ]
 
 { #category : #tests }

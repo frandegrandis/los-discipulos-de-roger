@@ -10,11 +10,11 @@ Class {
 { #category : #'as yet unclassified' }
 BoardGenerator class >> ucaGameDefault [ 
 	| aBoardGenerator |
-	aBoardGenerator := self with: 48 of: NoEffect new.
-	aBoardGenerator add: 20 of: SpeedUp new.
-	aBoardGenerator add: 20 of: Wormhole new.
+	aBoardGenerator := self with: 48 of: NoEffect create.
+	aBoardGenerator add: 20 of: SpeedUp create.
+	aBoardGenerator add: 20 of: Wormhole create.
 	aBoardGenerator add: 10 of: Moonwalk createField .
-	aBoardGenerator add: 2 of: AtomicBomb new.
+	aBoardGenerator add: 2 of: AtomicBomb create.
 	^ aBoardGenerator
 ]
 

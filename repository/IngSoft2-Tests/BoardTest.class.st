@@ -16,7 +16,7 @@ BoardTest >> boardGeneratorStandard [
 ]
 
 { #category : #tests }
-BoardTest >> test03aBoardWithAStandardBoardGeneratorHas50Fields [
+BoardTest >> testBoardWithAStandardBoardGeneratorHas50Fields [
 	| aBoard |
 	aBoard := self boardGeneratorStandard buildOf: 50.
 	self assert: aBoard length equals: 50

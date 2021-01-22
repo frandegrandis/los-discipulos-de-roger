@@ -25,7 +25,7 @@ CardDeck class >> with: aCollection of: aSequence [
 { #category : #'as yet unclassified' }
 CardDeck class >> withAllCards [
 	| cards |
-	cards:= { Overload new. Speed new. Acceleration new. Cancellation new. Redo new. Repeat new. }.
+	cards:= { Overload new. Speed new. Acceleration new. Cancellation new. Redo new. Repeat new. Reversal new }.
 	^self with: cards.
 ]
 
