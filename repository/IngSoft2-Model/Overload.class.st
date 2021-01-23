@@ -11,6 +11,10 @@ Overload class >> to: aTarget [
 	^ self new initializeWithTarget: aTarget
 ]
 
+{ #category : #comparing }
+Overload >> nullifyEffect: anUCAGame [ 
+]
+
 { #category : #playing }
 Overload >> triggerEffectFor: aGame [ 
 	

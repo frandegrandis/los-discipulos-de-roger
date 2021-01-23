@@ -646,6 +646,73 @@ UCAGameTest >> testTriggerCancellationEffect [
 ]
 
 { #category : #tests }
+UCAGameTest >> testTriggerCancellationEffectToAnSpecificOverload [
+	| aGame |
+	aGame := UCAGame
+		with: (Die of: 6 rolling: #(4))
+		on: self noEffectBoardOf12
+		playedBy: players
+		withLaps: 1
+		shuffling:
+			(CardDeck
+				with:
+					{aCancellation.
+					anOverload}
+				of: #(1 2)).
+	aGame player: 'Fran' playCard: (Overload to: targetManu).
+	aGame
+		player: 'Manu'
+		playCard: (Cancellation to: (TargetCard pointing: (Overload to: targetManu))).
+	self assert: (self cardsOf: 'Fran' in: aGame) equals: 1.
+	self assert: (self cardsOf: 'Manu' in: aGame) equals: 1.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 4.
+	aGame player: 'Manu' playCard: (Overload to: targetFran).
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 4.
+	aGame playTurn.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 6
+]
+
+{ #category : #tests }
+UCAGameTest >> testTriggerCancellationEffectToAnSpecificReversal [
+	| aGame anArrayOfFields |
+	anArrayOfFields := OrderedCollection new.
+	5 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	anArrayOfFields add: aWormhole.
+	6 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	aGame := UCAGame
+		with: (Die of: 6 rolling: #(5))
+		on: (Board withFields: anArrayOfFields) 
+		playedBy: players
+		withLaps: 1
+		shuffling:
+			(CardDeck
+				with:
+					{aCancellation.
+					aReversal}
+				of: #(1 2)).
+	aGame
+		player: 'Fran'
+		playCard: (Reversal to: (TargetBoardPosition pointing: 5)).
+	aGame
+		player: 'Manu'
+		playCard:
+			(Cancellation to:
+				(TargetCard pointing: (Reversal to: (TargetBoardPosition pointing: 5)))).
+	self assert: (self cardsOf: 'Fran' in: aGame) equals: 1.
+	self assert: (self cardsOf: 'Manu' in: aGame) equals: 1.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 1.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 1.
+]
+
+{ #category : #tests }
 UCAGameTest >> testTriggerCancellationEffectToAnSpecificSpeed [
 	| aGame |
 	aGame := UCAGame
@@ -700,6 +767,32 @@ UCAGameTest >> testTriggerCancellationEffectToAnSpecificSpeedButManuHavingTwoOfT
 	self assert: (self positionOf: 'Manu' in: aGame) equals: 0.
 	aGame playTurn.
 	self assert: (self positionOf: 'Manu' in: aGame) equals: 5
+]
+
+{ #category : #tests }
+UCAGameTest >> testTriggerMoreThan1ReversalOnSpeedUp [
+	| aGame anArrayOfFields |
+	anArrayOfFields := OrderedCollection new.
+	5 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	anArrayOfFields add: aSpeedUp.
+	6 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	aGame := UCAGame
+		with: (Die of: 6 rolling: #(5))
+		on: (Board withFields: anArrayOfFields)
+		playedBy: players
+		withLaps: 1
+		shuffling: (CardDeck with: {aReversal} of: #(1 2)).
+	aGame player: 'Fran' playCard: (Reversal to: (TargetBoardPosition pointing: 5)).
+	aGame player: 'Fran' playCard: (Reversal to: (TargetBoardPosition pointing: 5)).
+	self assert: (self cardsOf: 'Fran' in: aGame) equals: 0.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 9.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 0.
+	aGame player: 'Manu' playCard: (Reversal to: (TargetBoardPosition pointing: 5)).
+	self assert: (self cardsOf: 'Manu' in: aGame) equals: 1.
+	aGame playTurn.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 1.
 ]
 
 { #category : #tests }
@@ -956,6 +1049,52 @@ UCAGameTest >> testTriggerRepeatBeforeAnyTurnIsPlayed [
 ]
 
 { #category : #tests }
+UCAGameTest >> testTriggerReversalOnAtomicBomb [
+	| aGame anArrayOfFields |
+	anArrayOfFields := OrderedCollection new.
+	5 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	anArrayOfFields add: (anAtomicBomb).
+	6 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	aGame := UCAGame
+		with: (Die of: 6 rolling: #(5))
+		on: (Board withFields: anArrayOfFields)
+		playedBy: players
+		withLaps: 1
+		shuffling: (CardDeck with: {aReversal} of: #(1 2)).
+	aGame player: 'Fran' playCard: (Reversal to: (TargetBoardPosition pointing: 5)).
+	self assert: (self cardsOf: 'Fran' in: aGame) equals: 1.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 0.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 0.
+]
+
+{ #category : #tests }
+UCAGameTest >> testTriggerReversalOnMoonwalk [
+	| aGame anArrayOfFields |
+	anArrayOfFields := OrderedCollection new.
+	5 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	anArrayOfFields add: (Moonwalk createField: 2).
+	6 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	aGame := UCAGame
+		with: (Die of: 6 rolling: #(5))
+		on: (Board withFields: anArrayOfFields)
+		playedBy: players
+		withLaps: 1
+		shuffling: (CardDeck with: {aReversal} of: #(1 2)).
+	aGame player: 'Fran' playCard: (Reversal to: (TargetBoardPosition pointing: 5)).
+	self assert: (self cardsOf: 'Fran' in: aGame) equals: 1.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 5.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 2.
+	aGame playTurn.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 7.
+]
+
+{ #category : #tests }
 UCAGameTest >> testTriggerReversalOnNoEffectField [
 	| aGame |
 	aGame := UCAGame
@@ -972,6 +1111,54 @@ UCAGameTest >> testTriggerReversalOnNoEffectField [
 	self assert: (self positionOf: 'Manu' in: aGame) equals: 0.
 	aGame playTurn.
 	self assert: (self positionOf: 'Manu' in: aGame) equals: 4.
+]
+
+{ #category : #tests }
+UCAGameTest >> testTriggerReversalOnPickcard [
+	| aGame anArrayOfFields |
+	anArrayOfFields := OrderedCollection new.
+	5 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	anArrayOfFields add: (PickCard create).
+	6 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	aGame := UCAGame
+		with: (Die of: 6 rolling: #(5))
+		on: (Board withFields: anArrayOfFields)
+		playedBy: players
+		withLaps: 1
+		shuffling: (CardDeck with: {aReversal} of: #(1 2)).
+	aGame player: 'Fran' playCard: (Reversal to: (TargetBoardPosition pointing: 5)).
+	self assert: (self cardsOf: 'Fran' in: aGame) equals: 1.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 5.
+	self assert: (self cardsOf: 'Fran' in: aGame) equals: 0.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 5.
+	self assert: (self cardsOf: 'Manu' in: aGame) equals: 1.
+]
+
+{ #category : #tests }
+UCAGameTest >> testTriggerReversalOnSpeedUp [
+	| aGame anArrayOfFields |
+	anArrayOfFields := OrderedCollection new.
+	5 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	anArrayOfFields add: aSpeedUp.
+	6 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	aGame := UCAGame
+		with: (Die of: 6 rolling: #(5))
+		on: (Board withFields: anArrayOfFields)
+		playedBy: players
+		withLaps: 1
+		shuffling: (CardDeck with: {aReversal} of: #(1 2)).
+	aGame player: 'Fran' playCard: (Reversal to: (TargetBoardPosition pointing: 5)).
+	self assert: (self cardsOf: 'Fran' in: aGame) equals: 1.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 1.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 1.
 ]
 
 { #category : #tests }

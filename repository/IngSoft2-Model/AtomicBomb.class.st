@@ -8,3 +8,8 @@ Class {
 AtomicBomb >> triggerNormalEffectFor: aGame [
 	aGame resetAllPlayersPosition.
 ]
+
+{ #category : #playing }
+AtomicBomb >> triggerReverseEffectFor: anUCAGame [ 
+	self triggerNormalEffectFor: anUCAGame 
+]

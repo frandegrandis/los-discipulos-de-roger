@@ -11,6 +11,10 @@ Speed class >> to: aTarget [
 	^ self new initializeWithTarget: aTarget
 ]
 
+{ #category : #comparing }
+Speed >> nullifyEffect: anUCAGame [ 
+]
+
 { #category : #playing }
 Speed >> triggerEffectFor: aGame [
 	target objective = aGame actualPlayer

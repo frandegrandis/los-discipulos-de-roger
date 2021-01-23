@@ -80,6 +80,11 @@ UCAGame >> dice [
 	^dice
 ]
 
+{ #category : #'as yet unclassified' }
+UCAGame >> discardCardForActualPlayer [
+	self actualPlayer discard: 1
+]
+
 { #category : #StateChanging }
 UCAGame >> finishStartedGame [
 	state := Finished new.
@@ -209,6 +214,7 @@ UCAGame >> podiumOf: aScoreboardRaw [
 
 { #category : #playing }
 UCAGame >> removePermanentCard: aCard [
+	aCard nullifyEffect: self.
 	cardHistory remove: aCard
 ]
 
@@ -227,6 +233,11 @@ UCAGame >> resetAllPlayersPosition [
 { #category : #'as yet unclassified' }
 UCAGame >> reverseField: aPosition [ 
 	board reverseField: aPosition
+]
+
+{ #category : #'as yet unclassified' }
+UCAGame >> reverseMoonWalk: fieldsToMove [  
+	self moonWalk: (-1) * fieldsToMove
 ]
 
 { #category : #playing }

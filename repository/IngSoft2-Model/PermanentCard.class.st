@@ -9,6 +9,11 @@ PermanentCard >> isPermanent [
 	^true
 ]
 
+{ #category : #comparing }
+PermanentCard >> nullifyEffect: anUCAGame [ 
+	self subclassResponsibility 
+]
+
 { #category : #'as yet unclassified' }
 PermanentCard >> useEffectFor: aGame by: aPlayer [
 	aGame addPermanent: self by: aPlayer

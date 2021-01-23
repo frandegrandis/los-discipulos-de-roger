@@ -55,6 +55,19 @@ Player >> checkLapCount [
 		ifTrue: [ self resetLapsAndPosition ]
 ]
 
+{ #category : #'as yet unclassified' }
+Player >> discard: anInteger [ 
+	anInteger timesRepeat: [ self discardCard].
+]
+
+{ #category : #'as yet unclassified' }
+Player >> discardCard [
+	| random index |
+	random := Random new.
+	index  := random nextInt: hand size.
+	hand removeAt: index
+]
+
 { #category : #accessing }
 Player >> getCardAt: index [
 	^ hand removeAt: index

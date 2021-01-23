@@ -29,3 +29,8 @@ Moonwalk >> initializeWithN: anInteger [
 Moonwalk >> triggerNormalEffectFor: aGame [
 	aGame moonWalk: fieldsToMove .
 ]
+
+{ #category : #playing }
+Moonwalk >> triggerReverseEffectFor: anUCAGame [ 
+	anUCAGame reverseMoonWalk: fieldsToMove
+]

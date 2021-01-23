@@ -8,3 +8,8 @@ Class {
 PickCard >> triggerNormalEffectFor: aGame [ 
 	aGame pickCardForActualPlayer.
 ]
+
+{ #category : #playing }
+PickCard >> triggerReverseEffectFor: anUCAGame [ 
+	anUCAGame discardCardForActualPlayer
+]

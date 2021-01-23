@@ -4,6 +4,11 @@ Class {
 	#category : #'IngSoft2-Model-Card'
 }
 
+{ #category : #comparing }
+Reversal >> nullifyEffect: anUCAGame [ 
+	anUCAGame reverseField: target objective.
+]
+
 { #category : #playing }
 Reversal >> triggerEffectFor: anUCAGame [ 
 	
@@ -12,5 +17,5 @@ Reversal >> triggerEffectFor: anUCAGame [
 { #category : #playing }
 Reversal >> useEffectFor: aGame by: aPlayer [
 	aGame reverseField: target objective.
-	aGame addPermanent: self by: aPlayer
+	super useEffectFor: aGame by: aPlayer
 ]
