@@ -1185,6 +1185,28 @@ UCAGameTest >> testTriggerReversalOnWormhole [
 ]
 
 { #category : #tests }
+UCAGameTest >> testTriggerReversalOnWormholeAndDontTriggerOtherEffects [
+	| aGame anArrayOfFields |
+	anArrayOfFields := OrderedCollection new.
+	4 timesRepeat: [ anArrayOfFields add: aNoEffect ].
+	7 timesRepeat: [ anArrayOfFields add: aWormhole ].
+	aGame := UCAGame
+		with: (Die of: 6 rolling: #(4))
+		on: (Board withFields: anArrayOfFields)
+		playedBy: players
+		withLaps: 1
+		shuffling: (CardDeck with: {aReversal} of: #(1 2)).
+	aGame player: 'Fran' playCard: (Reversal to: (TargetBoardPosition pointing: 4)).
+	self assert: (self cardsOf: 'Fran' in: aGame) equals: 1.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Fran' in: aGame) equals: 8.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 0.
+	aGame playTurn.
+	self assert: (self positionOf: 'Manu' in: aGame) equals: 8.
+]
+
+{ #category : #tests }
 UCAGameTest >> testTriggerSpeedAndAcceleration [
 	| aGame |
 	aGame := UCAGame
